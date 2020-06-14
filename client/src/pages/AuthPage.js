@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
-import { login, signUp, getProfile } from "../actions/auth";
+import { login, signUp } from "../actions/auth";
 import { Avatar, Grid, Link, Typography } from "@material-ui/core";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import PersonAdd from "@material-ui/icons/PersonAdd";
@@ -14,7 +14,6 @@ const AuthPage = ({ login, signUp, ...props }) => {
   useEffect(() => {
     // stay connected
     if (props.isLogged) {
-      props.getProfile();
       props.history.push("/dashboard");
     }
   }, [props]);
@@ -73,6 +72,4 @@ const mapStateToProps = (state) => {
     isLogged: state.auth.isLogged,
   };
 };
-export default connect(mapStateToProps, { login, signUp, getProfile })(
-  AuthPage
-);
+export default connect(mapStateToProps, { login, signUp })(AuthPage);

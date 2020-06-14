@@ -10,6 +10,8 @@ import { useTable } from "react-table";
 
 const Table = ({ columns, data }) => {
   const classes = useStyles();
+  //memo
+
   // Use the state and functions returned from useTable to build your UI
   const { getTableProps, headerGroups, rows, prepareRow } = useTable({
     columns,

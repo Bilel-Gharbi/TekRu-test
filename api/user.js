@@ -17,6 +17,10 @@ userRouter.route("/login").post(validateLoginSchema, controller.login);
 
 userRouter.route("/data").get(verifyToken, controller.getAllUser);
 
-userRouter.route("/test").get(verifyToken, controller.test);
+userRouter
+  .route("/user")
+  .post(validateSignUpSchema, controller.addUser)
+  .patch(controller.updateUser)
+  .delete(controller.deleteUser);
 
 module.exports = userRouter;

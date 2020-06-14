@@ -102,39 +102,71 @@ const getAllUser = async (id) => {
   }
 };
 
-const createUser = async (AuthId) => {
+const createUser = async (data) => {
+  const { email, password } = data;
+  let _newUser;
+  const _exist = await User.findOne({ where: { email } });
+
+  if (!_exist) {
+    //hash password using bcrypt
+    const hashedPassword = await bcrypt.hash(password, 12);
+    data.password = hashedPassword;
+    _newUser = await User.create({ ...data });
+
+    const user = {
+      name: _newUser.name,
+      email: _newUser.email,
+      family_name: _newUser.family_name,
+      last_Login: _newUser.last_Login,
+    };
+
+    return user;
+  }
+  //if address email exist return an error
+  throw new CustomError(
+    "Add User",
+    "email",
+    "user service",
+    "Address mail already exist"
+  );
+};
+
+const updateUser = async (id, data) => {
   try {
-    let profile = await User.findOne({ where: { AuthId: AuthId } });
+    let _user = await User.findByPk(id);
+    let _updatedUser = await _user.update({ ...data });
 
-    let auth = await Auth.findByPk(AuthId);
+    let user = {
+      id: _updatedUser.id,
+      name: _updatedUser.name,
+      email: _updatedUser.email,
+      family_name: _updatedUser.family_name,
+      last_Login: _updatedUser.last_Login,
+    };
 
-    return { profile, email: auth.email };
+    return user;
   } catch (err) {
-    console.log("AuthService / login  Error ", err);
+    //if address email exist return an error
+    throw new CustomError("update User", "id", "user service");
   }
 };
 
-const updateUser = async (AuthId) => {
+const deleteUser = async (id) => {
   try {
-    let profile = await User.findOne({ where: { AuthId: AuthId } });
+    let _user = await User.findByPk(id);
+    let user = {
+      id: _user.id,
+      name: _user.name,
+      email: _user.email,
+      family_name: _user.family_name,
+      last_Login: _user.last_Login,
+    };
+    await _user.destroy();
 
-    let auth = await Auth.findByPk(AuthId);
-
-    return { profile, email: auth.email };
+    return user;
   } catch (err) {
-    console.log("AuthService / login  Error ", err);
-  }
-};
-
-const deleteUser = async (AuthId) => {
-  try {
-    let profile = await User.findOne({ where: { AuthId: AuthId } });
-
-    let auth = await Auth.findByPk(AuthId);
-
-    return { profile, email: auth.email };
-  } catch (err) {
-    console.log("AuthService / login  Error ", err);
+    //if address email exist return an error
+    throw new CustomError("Del User", "id", "user service");
   }
 };
 module.exports = {

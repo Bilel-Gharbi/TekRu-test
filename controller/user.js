@@ -54,16 +54,43 @@ const getAllUser = async (req, res) => {
       result,
     });
   } catch (err) {
-    res.status(401).json({ status: "fail", err: err.message });
+    res.status(401).json({ status: "fail", err });
   }
 };
-const test = async (req, res) => {
+
+const addUser = async (req, res) => {
   try {
-    let result = await service.getAllUser(req.userId);
+    let result = await service.createUser(req.body);
 
     res.status(201).json({
       status: "success",
-      msg: "test route",
+      msg: "user created",
+      result,
+    });
+  } catch (err) {
+    res.status(401).json({ status: "fail", err });
+  }
+};
+const updateUser = async (req, res) => {
+  try {
+    let result = await service.updateUser(req.query.id, req.body);
+
+    res.status(201).json({
+      status: "success",
+      msg: "update created",
+      result,
+    });
+  } catch (err) {
+    res.status(401).json({ status: "fail", err: err.message });
+  }
+};
+const deleteUser = async (req, res) => {
+  try {
+    let result = await service.deleteUser(req.query.id);
+
+    res.status(201).json({
+      status: "success",
+      msg: "user deleted",
       result,
     });
   } catch (err) {
@@ -76,5 +103,7 @@ module.exports = {
   login,
   getUserProfile,
   getAllUser,
-  test,
+  addUser,
+  updateUser,
+  deleteUser,
 };
